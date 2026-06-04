@@ -105,7 +105,6 @@ export default function Footer() {
             <a href="#services" className="hover:text-blue-200 transition-colors">対応工事</a>
             <a href="#cases" className="hover:text-blue-200 transition-colors">施工事例</a>
             <a href="#company" className="hover:text-blue-200 transition-colors">会社概要</a>
-            <a href="#" className="hover:text-blue-200 transition-colors">プライバシーポリシー</a>
           </div>
           <div className="text-blue-100 text-xs">
              &copy; exist LLC All Rights Reserved.
