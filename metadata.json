@@ -1,0 +1,6 @@
+{
+  "name": "exist Renovation Landing Page",
+  "description": "A landing page for a renovation company.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
