@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { ArrowRight, ChevronLeft, ChevronRight, X, Maximize2 } from 'lucide-react';
 
 const cases = [
   {
@@ -28,7 +28,7 @@ const cases = [
   }
 ];
 
-function ImageComparisonCard({ item }: { item: typeof cases[0] }) {
+function ImageComparisonView({ item, isModal = false }: { item: typeof cases[0], isModal?: boolean }) {
   const [sliderPosition, setSliderPosition] = useState(50);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -49,55 +49,86 @@ function ImageComparisonCard({ item }: { item: typeof cases[0] }) {
   };
 
   const handleMouseLeave = () => {
-    // Return to default center position when mouse leaves the image
-    setSliderPosition(50);
+    if (!isModal) {
+      setSliderPosition(50);
+    }
   };
 
   return (
-    <div className="flex flex-col gap-4 group">
+    <div 
+      ref={containerRef}
+      className={`relative w-full overflow-hidden select-none cursor-ew-resize ${isModal ? 'h-[60vh] md:h-[80vh] rounded-none md:rounded-xl' : 'h-[220px] rounded-2xl shadow border border-gray-100 bg-gray-50'}`}
+      onMouseMove={handleMove}
+      onTouchMove={handleMove}
+      onMouseLeave={handleMouseLeave}
+    >
+      {/* Background After Image */}
+      <div className="absolute inset-0 bg-gray-100">
+         <span className={`absolute z-10 bg-[#0056D2]/90 text-white font-bold rounded uppercase tracking-wider backdrop-blur-sm shadow-sm ${isModal ? 'top-4 right-4 text-xs px-3 py-1' : 'top-2 right-2 text-[10px] px-2 py-0.5'}`}>After</span>
+         <img src={item.afterImage} alt={`${item.title} after`} className={`w-full h-full ${isModal ? 'object-contain' : 'object-cover'}`} />
+      </div>
+
+      {/* Foreground Before Image (Clipped) */}
       <div 
-        ref={containerRef}
-        className="relative h-[220px] w-full rounded-2xl overflow-hidden shadow border border-gray-100 bg-gray-50 select-none cursor-ew-resize"
-        onMouseMove={handleMove}
-        onTouchMove={handleMove}
-        onMouseLeave={handleMouseLeave}
+        className="absolute inset-0 z-0 bg-gray-200"
+        style={{ clipPath: `polygon(0 0, ${sliderPosition}% 0, ${sliderPosition}% 100%, 0 100%)` }}
       >
-        {/* Background After Image */}
-        <div className="absolute inset-0">
-           <span className="absolute top-2 right-2 z-10 bg-[#0056D2]/90 text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider backdrop-blur-sm shadow-sm">After</span>
-           <img src={item.afterImage} alt={`${item.title} after`} className="w-full h-full object-cover" />
-        </div>
+        <span className={`absolute z-10 bg-gray-600/80 text-white font-bold rounded uppercase tracking-wider backdrop-blur-sm shadow-sm ${isModal ? 'top-4 left-4 text-xs px-3 py-1' : 'top-2 left-2 text-[10px] px-2 py-0.5'}`}>Before</span>
+        <img src={item.beforeImage} alt={`${item.title} before`} className={`w-full h-full grayscale-[15%] ${isModal ? 'object-contain' : 'object-cover'}`} />
+        
+        {/* Divider Line Attached to the clipped edge */}
+        <div className="absolute top-0 bottom-0 right-0 w-[2px] bg-white shadow-[0_0_8px_rgba(0,0,0,0.5)]"></div>
+      </div>
 
-        {/* Foreground Before Image (Clipped) */}
-        <div 
-          className="absolute inset-0 z-0 bg-gray-200"
-          style={{ clipPath: `polygon(0 0, ${sliderPosition}% 0, ${sliderPosition}% 100%, 0 100%)` }}
-        >
-          <span className="absolute top-2 left-2 z-10 bg-gray-600/80 text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider backdrop-blur-sm shadow-sm">Before</span>
-          <img src={item.beforeImage} alt={`${item.title} before`} className="w-full h-full object-cover grayscale-[15%]" />
-          
-          {/* Divider Line Attached to the clipped edge */}
-          <div className="absolute top-0 bottom-0 right-0 w-[2px] bg-white shadow-[0_0_8px_rgba(0,0,0,0.5)]"></div>
-        </div>
-
-        {/* Handle Graphic */}
-        <div 
-          className="absolute top-1/2 pointer-events-none z-10 transition-transform duration-100"
-          style={{ left: `${sliderPosition}%`, transform: 'translate(-50%, -50%)' }}
-        >
-          <div className="w-8 h-8 bg-white rounded-full shadow-lg flex items-center justify-center border border-gray-100">
-            <ChevronLeft size={16} className="text-[#0056D2] absolute left-0.5" />
-            <ChevronRight size={16} className="text-[#0056D2] absolute right-0.5" />
-          </div>
+      {/* Handle Graphic */}
+      <div 
+        className="absolute top-1/2 pointer-events-none z-10 transition-transform duration-100"
+        style={{ left: `${sliderPosition}%`, transform: 'translate(-50%, -50%)' }}
+      >
+        <div className={`bg-white rounded-full shadow-lg flex items-center justify-center border border-gray-100 ${isModal ? 'w-12 h-12' : 'w-8 h-8'}`}>
+          <ChevronLeft size={isModal ? 24 : 16} className="text-[#0056D2] absolute left-0.5" />
+          <ChevronRight size={isModal ? 24 : 16} className="text-[#0056D2] absolute right-0.5" />
         </div>
       </div>
-      
-      <h3 className="text-center font-bold text-gray-900 group-hover:text-[#0056D2] transition-colors cursor-pointer">{item.title}</h3>
+    </div>
+  );
+}
+
+function ImageComparisonCard({ item, onClick }: { item: typeof cases[0], onClick: () => void }) {
+  return (
+    <div className="flex flex-col gap-4 group">
+      <div className="relative" onClick={onClick}>
+        <ImageComparisonView item={item} />
+        {/* Maximize Icon Overlay */}
+        <div className="absolute bottom-2 right-2 z-20 bg-white/80 backdrop-blur pointer-events-none p-1.5 rounded-md shadow-sm opacity-0 group-hover:opacity-100 transition-opacity">
+           <Maximize2 size={16} className="text-gray-700" />
+        </div>
+      </div>
+      <h3 className="text-center font-bold text-gray-900 group-hover:text-[#0056D2] transition-colors cursor-pointer" onClick={onClick}>{item.title}</h3>
     </div>
   );
 }
 
 export default function Cases() {
+  const [selectedCase, setSelectedCase] = useState<typeof cases[0] | null>(null);
+
+  // Close modal on escape key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setSelectedCase(null);
+    };
+    if (selectedCase) {
+      window.addEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = '';
+    };
+  }, [selectedCase]);
+
   return (
     <section id="cases" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -120,11 +151,39 @@ export default function Cases() {
         {/* Cases Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {cases.map((item) => (
-            <ImageComparisonCard key={item.id} item={item} />
+            <ImageComparisonCard key={item.id} item={item} onClick={() => setSelectedCase(item)} />
           ))}
         </div>
         
       </div>
+
+      {/* Modal */}
+      {selectedCase && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 md:p-8" onClick={() => setSelectedCase(null)}>
+          <div 
+            className="w-full max-w-5xl bg-gray-900 rounded-xl overflow-hidden shadow-2xl relative flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex justify-between items-center p-4 bg-black/50 absolute top-0 w-full z-50">
+              <h3 className="text-white font-bold text-lg">{selectedCase.title}</h3>
+              <button 
+                onClick={() => setSelectedCase(null)}
+                className="text-gray-300 hover:text-white bg-black/20 hover:bg-black/40 rounded-full p-2 transition-colors"
+              >
+                <X size={24} />
+              </button>
+            </div>
+            
+            <div className="mt-14 w-full h-full flex-grow flex items-center justify-center p-2 md:p-4 pb-0 bg-gray-900">
+               <ImageComparisonView item={selectedCase} isModal={true} />
+            </div>
+            
+            <div className="p-4 bg-gray-900 text-center text-gray-400 text-sm">
+              画像を左右にスワイプまたはドラッグで比較できます
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
