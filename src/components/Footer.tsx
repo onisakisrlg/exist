@@ -19,7 +19,7 @@ export default function Footer() {
                 />
                 <div className="flex flex-col">
                   <span className="text-2xl font-bold text-gray-900 leading-none mb-1 text-[#0056D2]">exist合同会社</span>
-                  <span className="text-xs text-gray-600 font-medium tracking-wider">リフォーム・原状回復・内装工事</span>
+                  <span className="text-xs text-gray-600 font-medium tracking-wider">リフォーム・リノベーション・原状回復</span>
                 </div>
               </a>
             </div>

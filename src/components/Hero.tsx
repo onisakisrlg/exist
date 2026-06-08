@@ -38,9 +38,9 @@ export default function Hero() {
           <div className="w-full lg:w-1/2 lg:absolute top-0 right-0 h-64 sm:h-96 lg:h-full mt-10 lg:mt-0">
             <div className="h-full w-full mask-image-gradient-left">
               <img 
-                src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
-                alt="Modern comfortable home interior" 
-                className="w-full h-full object-cover rounded-tl-[100px] lg:rounded-none shadow-2xl lg:shadow-none"
+                src="https://i.postimg.cc/Y0wSqGwy/image.png" 
+                alt="exist合同会社 Top Image" 
+                className="w-full h-full object-cover rounded-tl-[100px] lg:rounded-none shadow-2xl lg:shadow-none brightness-[0.98] contrast-[1.02]"
               />
             </div>
             {/* Fade overlay mapping target image */}

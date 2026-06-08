@@ -17,7 +17,7 @@ export default function Header() {
             />
             <div className="flex flex-col">
               <span className="text-xl font-bold text-gray-900 leading-none mb-1">exist合同会社</span>
-              <span className="text-[10px] sm:text-xs text-gray-600 font-medium tracking-wider">リフォーム・原状回復・内装工事</span>
+              <span className="text-[10px] sm:text-xs text-gray-600 font-medium tracking-wider">リフォーム・リノベーション・原状回復</span>
             </div>
           </a>
 

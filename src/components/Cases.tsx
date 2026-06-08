@@ -148,7 +148,7 @@ function ImageComparisonView({ item, isModal = false }: { item: typeof cases[0],
   );
 }
 
-function ImageComparisonCard({ item, onClick }: { item: typeof cases[0], onClick: () => void }) {
+function ImageComparisonCard({ item, onClick }: { item: typeof cases[0], onClick: () => void, key?: any }) {
   return (
     <div className="flex flex-col gap-4 group">
       <div className="relative" onClick={onClick}>
