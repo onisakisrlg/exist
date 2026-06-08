@@ -25,6 +25,60 @@ const cases = [
     title: '【ドアシート貼り】',
     beforeImage: 'https://i.postimg.cc/N09fHqDW/1000011500.jpg',
     afterImage: 'https://i.postimg.cc/8PN5nYkJ/1000011499.jpg'
+  },
+  {
+    id: 5,
+    title: '【浴室ドア修理】',
+    beforeImage: 'https://i.postimg.cc/SxFdx07M/image.png',
+    afterImage: 'https://i.postimg.cc/j5KBwwH2/image.png'
+  },
+  {
+    id: 6,
+    title: '【洗濯パン設置】',
+    beforeImage: 'https://i.postimg.cc/qRQTLXQC/image.png',
+    afterImage: 'https://i.postimg.cc/TYK6VbDH/image.png'
+  },
+  {
+    id: 7,
+    title: '【室内ドアシート貼り】',
+    beforeImage: 'https://i.postimg.cc/xCpZ8stq/image.png',
+    afterImage: 'https://i.postimg.cc/GtB5yk56/image.png'
+  },
+  {
+    id: 8,
+    title: '【網戸貼り替え】',
+    beforeImage: 'https://i.postimg.cc/dQdXw9G8/image.png',
+    afterImage: 'https://i.postimg.cc/dtjxTtHt/image.png'
+  },
+  {
+    id: 9,
+    title: '【浴室シート貼り】',
+    beforeImage: 'https://i.postimg.cc/FzZV119g/image.png',
+    afterImage: 'https://i.postimg.cc/kXJyzNcH/image.png'
+  },
+  {
+    id: 10,
+    title: '【洗面台水栓交換】',
+    beforeImage: 'https://i.postimg.cc/V6FCWT3Q/image.png',
+    afterImage: 'https://i.postimg.cc/YCJYrQ6r/image.png'
+  },
+  {
+    id: 11,
+    title: '【キッチンパネル施工】',
+    beforeImage: 'https://i.postimg.cc/nzdLztyq/image.png',
+    afterImage: 'https://i.postimg.cc/pV6TMRQ4/image.png'
+  },
+  {
+    id: 12,
+    title: '【CF上貼り】',
+    beforeImage: 'https://i.postimg.cc/0QrTY6WY/image.png',
+    afterImage: 'https://i.postimg.cc/3r0MWvDJ/image.png'
+  },
+  {
+    id: 13,
+    title: '【下駄箱シート貼り】',
+    beforeImage: 'https://i.postimg.cc/kX7yLrCL/image.png',
+    afterImage: 'https://i.postimg.cc/dtWGXL4m/image.png'
   }
 ];
 
@@ -111,6 +165,7 @@ function ImageComparisonCard({ item, onClick }: { item: typeof cases[0], onClick
 
 export default function Cases() {
   const [selectedCase, setSelectedCase] = useState<typeof cases[0] | null>(null);
+  const [showAll, setShowAll] = useState(false);
 
   // Close modal on escape key
   useEffect(() => {
@@ -129,6 +184,8 @@ export default function Cases() {
     };
   }, [selectedCase]);
 
+  const visibleCases = showAll ? cases : cases.slice(0, 4);
+
   return (
     <section id="cases" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -142,18 +199,34 @@ export default function Cases() {
             </h2>
           </div>
           
-          <a href="#" className="flex items-center text-[#0056D2] hover:text-[#0043A8] font-bold text-sm group">
-            すべての施工事例を見る 
-            <ArrowRight size={16} className="ml-1 group-hover:translate-x-1 transition-transform" />
-          </a>
+          <button 
+            onClick={() => setShowAll(!showAll)} 
+            className="flex items-center text-[#0056D2] hover:text-[#0043A8] font-bold text-sm group cursor-pointer"
+          >
+            {showAll ? '閉じる' : 'すべての施工事例を見る'}
+            <ArrowRight size={16} className={`ml-1 transition-transform ${showAll ? 'rotate-90' : 'group-hover:translate-x-1'}`} />
+          </button>
         </div>
         
         {/* Cases Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {cases.map((item) => (
+          {visibleCases.map((item) => (
             <ImageComparisonCard key={item.id} item={item} onClick={() => setSelectedCase(item)} />
           ))}
         </div>
+
+        {/* Bottom Expand Button */}
+        {!showAll && (
+          <div className="mt-12 text-center">
+            <button
+              onClick={() => setShowAll(true)}
+              className="inline-flex items-center gap-2 border border-[#0056D2] text-[#0056D2] hover:bg-blue-50 px-8 py-3 rounded-full transition-colors font-bold text-sm cursor-pointer shadow-sm"
+            >
+              新しい施工事例をもっと見る
+              <ArrowRight size={16} className="translate-y-[0.5px]" />
+            </button>
+          </div>
+        )}
         
       </div>
 
